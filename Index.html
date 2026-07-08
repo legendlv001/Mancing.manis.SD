@@ -1,246 +1,617 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0f172a">
 
-    <title>Crazy Fishing Simulator</title>
+<meta charset="UTF-8">
 
-    <meta name="description" content="Crazy Fishing Simulator - Game Memancing Online">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="assets/icons/icon-192.png">
+<meta name="theme-color"
+content="#0369A1">
 
-    <link rel="stylesheet" href="style.css">
+<meta
+name="description"
+content="Crazy Fishing Simulator">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<title>Crazy Fishing Simulator</title>
+
+<link
+rel="manifest"
+href="manifest.json">
+
+<link
+rel="icon"
+type="image/svg+xml"
+href="assets/icons/icon.svg">
+
+<link
+rel="stylesheet"
+href="style.css">
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+</script>
+
 </head>
 
 <body>
 
-<!-- Splash Screen -->
+<!-- ===================== -->
+<!-- Splash -->
+<!-- ===================== -->
+
 <div id="loadingScreen">
+
+    <img
+    src="assets/logo/logo.svg"
+    alt="Logo"
+    width="150">
+
     <div class="loader"></div>
-    <h1>Crazy Fishing Simulator</h1>
+
+    <h2>Crazy Fishing Simulator</h2>
+
     <p>Loading...</p>
+
 </div>
 
+<!-- ===================== -->
 <!-- Kamera -->
+<!-- ===================== -->
+
 <video
-    id="camera"
-    autoplay
-    playsinline
-    muted>
+id="camera"
+autoplay
+playsinline
+muted>
 </video>
 
-<!-- Canvas Game -->
+<!-- ===================== -->
+<!-- Canvas -->
+<!-- ===================== -->
+
 <canvas id="gameCanvas"></canvas>
 
+<!-- ===================== -->
 <!-- HUD -->
+<!-- ===================== -->
+
 <div id="hud">
 
-    <div class="topLeft">
+<div class="topLeft">
 
-        <button id="cameraBtn">
-            📷
-        </button>
+<button
+id="menuBtn"
+title="Menu">
 
-        <button id="menuBtn">
-            ☰
-        </button>
+☰
 
-    </div>
+</button>
 
-    <div class="topRight">
+<button
+id="cameraBtn"
+title="Ganti Kamera">
 
-        <div class="money">
-            💰
-            <span id="money">
-                0
-            </span>
-        </div>
+📷
 
-        <div class="level">
-            ⭐
-            <span id="level">
-                1
-            </span>
-        </div>
-
-    </div>
+</button>
 
 </div>
 
-<!-- Bottom Action -->
+<div class="topRight">
+
+<div>
+
+💰 Rp
+<span id="money">
+
+0
+
+</span>
+
+</div>
+
+<div>
+
+⭐ Lv
+<span id="level">
+
+1
+
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ===================== -->
+<!-- XP -->
+<!-- ===================== -->
+
+<div id="xpContainer">
+
+<div id="xpBar">
+
+<div id="xpFill"></div>
+
+</div>
+
+</div>
+
+<!-- ===================== -->
+<!-- Challenge -->
+<!-- ===================== -->
+
+<div
+id="challengeBar"
+class="hidden">
+
+<div
+id="challengeProgress">
+
+</div>
+
+</div>
+
+<!-- ===================== -->
+<!-- Tombol -->
+<!-- ===================== -->
+
 <div id="bottomPanel">
 
-    <button id="castBtn">
-        🎣 Lempar Kail
-    </button>
+<button
+id="castBtn">
 
-    <button id="pullBtn" class="hidden">
-        Tarik!
-    </button>
+🎣 Lempar Kail
+
+</button>
+
+<button
+id="pullBtn"
+class="hidden">
+
+💪 Tarik
+
+</button>
 
 </div>
 
-<!-- Challenge -->
-<div id="challengeBar" class="hidden">
-    <div id="challengeProgress"></div>
+<!-- ===================== -->
+<!-- Notification -->
+<!-- ===================== -->
+
+<div
+id="notification"
+class="hidden">
+
+Notifikasi
+
 </div>
 
-<!-- Modal Hasil -->
+<!-- ===================== -->
+<!-- Achievement -->
+<!-- ===================== -->
+
+<div
+id="achievementPopup"
+class="hidden">
+
+Achievement
+
+</div>
+
+<!-- ===================== -->
+<!-- Inventory -->
+<!-- ===================== -->
+
+<div
+id="inventoryPanel"
+class="panel hidden">
+
+<h2>
+
+🎒 Inventory
+
+</h2>
+
+<hr>
+
+<div
+id="inventoryList">
+
+</div>
+
+<br>
+
+<button
+onclick="sellAllFish()">
+
+💰 Jual Semua
+
+</button>
+
+</div>
+
+<!-- ===================== -->
+<!-- Upgrade Panel -->
+<!-- ===================== -->
+
+<div
+id="upgradePanel"
+class="panel hidden">
+
+<h2>⬆️ Upgrade</h2>
+
+<hr><br>
+
+<p>🎣 Level Pancing</p>
+
+<p>
+
+Level :
+<span id="rodLevel">1</span>
+
+</p>
+
+<button
+onclick="upgradeRod()">
+
+Upgrade Pancing
+
+</button>
+
+<br><br>
+
+<p>📦 Kapasitas Tas</p>
+
+<p>
+
+Level :
+<span id="chestLevel">1</span>
+
+</p>
+
+<button
+onclick="upgradeChest()">
+
+Upgrade Tas
+
+</button>
+
+</div>
+
+<!-- ===================== -->
+<!-- Statistik -->
+<!-- ===================== -->
+
+<div
+id="statsPanel"
+class="panel hidden">
+
+<h2>
+
+📊 Statistik
+
+</h2>
+
+<hr><br>
+
+<p>
+
+💰 Uang :
+<b id="statMoney">0</b>
+
+</p>
+
+<br>
+
+<p>
+
+🐟 Total Ikan :
+<b id="statFish">0</b>
+
+</p>
+
+<br>
+
+<p>
+
+⭐ Level :
+<b id="statLevel">1</b>
+
+</p>
+
+<br>
+
+<p>
+
+✨ XP :
+<b id="statXP">0 / 100</b>
+
+</p>
+
+<br>
+
+<p>
+
+🏆 Achievement
+
+</p>
+
+<div
+id="achievementList">
+
+Belum ada.
+
+</div>
+
+</div>
+
+<!-- ===================== -->
+<!-- Pengaturan -->
+<!-- ===================== -->
+
+<div
+id="settingsPanel"
+class="panel hidden">
+
+<h2>
+
+⚙️ Pengaturan
+
+</h2>
+
+<hr>
+
+<br>
+
+<button
+onclick="toggleInventory()">
+
+🎒 Inventory
+
+</button>
+
+<br><br>
+
+<button
+onclick="toggleUpgrade()">
+
+⬆️ Upgrade
+
+</button>
+
+<br><br>
+
+<button
+onclick="toggleStats()">
+
+📊 Statistik
+
+</button>
+
+<br><br>
+
+<button
+onclick="backupNow()">
+
+💾 Backup
+
+</button>
+
+<br><br>
+
+<button
+onclick="exportSave()">
+
+📤 Export Save
+
+</button>
+
+<br><br>
+
+<label
+for="importFile"
+class="importButton">
+
+📥 Import Save
+
+</label>
+
+<input
+
+id="importFile"
+
+type="file"
+
+accept=".json"
+
+style="display:none"
+
+onchange="importSave(this.files[0])">
+
+<br><br>
+
+<button
+onclick="deleteSave()">
+
+🗑 Reset Game
+
+</button>
+
+</div>
+
+<!-- ===================== -->
+<!-- Tentang -->
+<!-- ===================== -->
+
+<div
+id="aboutPanel"
+class="panel hidden">
+
+<h2>
+
+🎣 Crazy Fishing Simulator
+
+</h2>
+
+<hr>
+
+<br>
+
+<p>
+
+Versi 1.0
+
+</p>
+
+<br>
+
+<p>
+
+Game memancing berbasis HTML5,
+Canvas, dan Progressive Web App.
+
+</p>
+
+<br>
+
+<p>
+
+Developer
+
+</p>
+
+<b>
+
+Ijonk
+
+</b>
+
+</div>
+
+<!-- ===================== -->
+<!-- Catch Modal -->
+<!-- ===================== -->
+
 <div id="catchModal" class="hidden">
 
     <div class="card">
 
-        <h2>HASIL TANGKAPAN</h2>
-
-        <div id="playerName"></div>
-
-        <div id="fishEmoji">
-            🐟
-        </div>
-
-        <h1 id="fishName">
-            Ikan
-        </h1>
-
-        <div id="fishRank">
-            Rare
-        </div>
-
-        <div id="fishWeight">
-            1.25 Kg
-        </div>
-
-        <div id="fishLength">
-            45 cm
-        </div>
-
-        <div id="fishPrice">
-            Rp 0
-        </div>
-
-        <div id="catchDate"></div>
+        <h2>🎉 Selamat!</h2>
 
         <img
             id="playerPhoto"
-            src=""
-            alt=""
-        >
+            src="assets/logo/logo.svg"
+            alt="Player">
+
+        <div id="fishEmoji">🐟</div>
+
+        <h2 id="fishName">Nama Ikan</h2>
+
+        <div id="fishRank">
+            Common
+        </div>
+
+        <p id="fishWeight">
+            0 Kg
+        </p>
+
+        <p id="fishLength">
+            0 cm
+        </p>
+
+        <p id="fishPrice">
+            Rp 0
+        </p>
+
+        <p id="catchDate">
+            -
+        </p>
 
         <div class="buttonGroup">
 
             <button id="downloadBtn">
+
                 📥 Download
+
             </button>
 
             <button id="shareBtn">
-                📲 WhatsApp
+
+                📤 Bagikan
+
             </button>
 
         </div>
 
-        <button id="continueBtn">
-            Lanjut
+        <button
+            id="continueBtn">
+
+            Lanjutkan
+
         </button>
 
     </div>
 
 </div>
 
-<!-- Inventory -->
-<div id="inventoryPanel" class="panel hidden">
+<!-- ===================== -->
+<!-- Audio -->
+<!-- ===================== -->
 
-    <h2>Inventory</h2>
+<audio
+id="castSound"
+src="assets/sounds/cast.mp3"
+preload="auto">
+</audio>
 
-    <div id="inventoryList"></div>
+<audio
+id="hookSound"
+src="assets/sounds/hook.mp3"
+preload="auto">
+</audio>
 
-</div>
+<audio
+id="catchSound"
+src="assets/sounds/catch.mp3"
+preload="auto">
+</audio>
 
-<!-- Upgrade -->
-<div id="upgradePanel" class="panel hidden">
+<audio
+id="buttonSound"
+src="assets/sounds/button.mp3"
+preload="auto">
+</audio>
 
-    <h2>Upgrade</h2>
+<audio
+id="bgm"
+src="assets/sounds/bgm.mp3"
+loop>
+</audio>
 
-    <button id="upgradeRod">
-        Upgrade Pancing
-    </button>
-
-    <button id="upgradeChest">
-        Upgrade Peti
-    </button>
-
-</div>
-
-<!-- Statistik -->
-<div id="statsPanel" class="panel hidden">
-
-    <h2>Statistik</h2>
-
-    <ul>
-
-        <li>Total Ikan :
-            <span id="statFish">
-                0
-            </span>
-        </li>
-
-        <li>Total Uang :
-            <span id="statMoney">
-                0
-            </span>
-        </li>
-
-        <li>Level :
-            <span id="statLevel">
-                1
-            </span>
-        </li>
-
-        <li>XP :
-            <span id="statXP">
-                0
-            </span>
-        </li>
-
-    </ul>
-
-</div>
-
-<!-- Achievement -->
-<div id="achievementPopup" class="hidden">
-
-    🏆 Achievement Unlocked
-
-</div>
-
-<!-- Notification -->
-<div id="notification"></div>
+<!-- ===================== -->
+<!-- Scripts -->
+<!-- ===================== -->
 
 <script src="fish.js"></script>
+
+<script src="fishRenderer.js"></script>
+
 <script src="player.js"></script>
+
 <script src="storage.js"></script>
+
 <script src="ui.js"></script>
+
 <script src="game.js"></script>
+
 <script src="app.js"></script>
 
-<script>
-
-if('serviceWorker' in navigator){
-
-    window.addEventListener('load',()=>{
-
-        navigator.serviceWorker.register('service-worker.js');
-
-    });
-
-}
-
-</script>
-
 </body>
+
 </html>
