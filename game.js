@@ -247,11 +247,11 @@ function updateHook(){
 
         hook.y+=hook.speed;
 
+        // Jika kail sudah menyentuh kedalaman maksimal (dasar)
         if(hook.y>=hook.maxDepth){
 
-            hook.casting=false;
-
-            hook.pulling=true;
+            hook.y = hook.maxDepth; // Kunci posisi kail di dasar
+            hook.casting = false;   // Hentikan proses jatuh, tapi JANGAN buat hook.pulling = true
 
         }
 
