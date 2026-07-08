@@ -376,7 +376,7 @@ function drawFish(){
 }
 
 // ==============================
-// Lempar Kail
+// Lempar Kail (Ganti fungsi bawaan kamu dengan ini)
 // ==============================
 
 function castLine(){
@@ -389,6 +389,11 @@ function castLine(){
 
     hook.casting=true;
 
+    // Sembunyikan tombol lempar saat kail meluncur
+    if(castBtn){
+        castBtn.classList.add("hidden");
+    }
+
     if(castSound){
 
         castSound.currentTime=0;
@@ -400,12 +405,13 @@ function castLine(){
 }
 
 // ==============================
-// Tarik Kail
+// Tarik Kail (Ganti fungsi bawaan kamu dengan ini)
 // ==============================
 
 function pullLine(){
 
-    if(!hook.casting) return;
+    // PERBAIKAN: Izinkan kail ditarik walaupun hook.casting sudah false (saat di dasar)
+    if(hook.pulling) return; 
 
     hook.casting=false;
 
