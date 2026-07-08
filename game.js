@@ -646,6 +646,14 @@ function checkCatch() {
 
     resetHook();
 
+    // TAMBAHKAN KODE INI: Reset tombol saat kail sudah kembali ke atas air
+    if(castBtn){
+        castBtn.classList.remove("hidden");
+    }
+    if(pullBtn){
+        pullBtn.classList.add("hidden");
+    }
+
 }
 
 // ==============================
