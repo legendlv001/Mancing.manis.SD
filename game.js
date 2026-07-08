@@ -471,24 +471,23 @@ function checkStrike(){
 }
 
 // ==============================
+// ==============================
 // Event Button
 // ==============================
 
-castBtn.addEventListener(
+if(castBtn){
+    castBtn.addEventListener(
+        "click",
+        castLine
+    );
+}
 
-    "click",
-
-    castLine
-
-);
-
-pullBtn.addEventListener(
-
-    "click",
-
-    pullLine
-
-);
+if(pullBtn){
+    pullBtn.addEventListener(
+        "click",
+        pullLine
+    );
+}
 
 // ==========================================
 // game.js FINAL
