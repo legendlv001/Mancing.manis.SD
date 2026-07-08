@@ -452,7 +452,7 @@ function checkStrike(){
 }
 
 // ==============================
-// Event Button
+// Event Button (Ada di Part 2)
 // ==============================
 
 if(castBtn){
@@ -469,13 +469,16 @@ if(pullBtn){
     );
 }
 
-// Sakelar ON/OFF Kamera
-const photoBtn = document.getElementById("photoBtn"); 
+// ==========================================
+// HAPUS KODE TOMBOL LAMA, GANTI DENGAN INI:
+// ==========================================
+const photoBtn = document.getElementById("photoBtn") || document.getElementById("cameraBtn") || document.getElementById("toggleCameraBtn"); 
+
 if (photoBtn) {
     photoBtn.addEventListener("click", () => {
         if (localStream) {
             stopCamera();
-            photoBtn.textContent = "📷 Hidupkan Kamera";
+            photoBtn.textContent = "📸 Hidupkan Kamera";
             console.log("Kamera dimatikan.");
         } else {
             startCamera();
@@ -483,7 +486,9 @@ if (photoBtn) {
             console.log("Kamera dihidupkan.");
         }
     });
-}
+} else {
+    console.log("Tombol kamera tidak ditemukan di HTML. Periksa ID tombol Anda.");
+}}
 
 // ==========================================
 // Part 3 - Catch System
