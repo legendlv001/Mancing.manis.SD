@@ -148,40 +148,13 @@ function resetHook(){
 resetHook();
 
 // ==============================
-// Background
+// Background (Ubah fungsi ini agar transparan)
 // ==============================
 
 function drawBackground(){
 
-    const g=ctx.createLinearGradient(
-
-        0,
-
-        0,
-
-        0,
-
-        canvas.height
-
-    );
-
-    g.addColorStop(0,"#7DD3FC");
-
-    g.addColorStop(1,"#0284C7");
-
-    ctx.fillStyle=g;
-
-    ctx.fillRect(
-
-        0,
-
-        0,
-
-        canvas.width,
-
-        canvas.height
-
-    );
+    // Menghapus frame lama dan membuat canvas menjadi transparan murni
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 }
 
