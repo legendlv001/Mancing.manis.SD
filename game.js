@@ -521,9 +521,13 @@ function catchFish() {
     }
 
     // Achievement
-    if (typeof unlockAchievement === "function") {
+    // Achievement
+if (
+    typeof unlockAchievement === "function" &&
+    typeof player !== "undefined"
+) {
 
-        if (player.totalFish === 1) {
+    if (player.totalFish === 1) {
 
             unlockAchievement("Strike Pertama");
 
@@ -562,9 +566,12 @@ function catchFish() {
     showCatchResult(fish);
 
     // Bersihkan ikan
-    game.currentFish = null;
+// Bersihkan ikan
+game.currentFish = null;
 
+if(pullBtn){
     pullBtn.classList.add("hidden");
+}
 
 }
 
