@@ -921,16 +921,14 @@ setInterval(() => {
 // ==============================
 // Start Game
 // ==============================
-
 window.addEventListener(
     "load",
     () => {
-        // 1. Jalankan inisialisasi aplikasi dari app.js terlebih dahulu
+        // Panggil initApp dari app.js
         if (typeof initApp === "function") {
             initApp(); 
         }
 
-        // 2. Jalankan fungsi core game yang sudah kamu buat
         startCamera();
         resetHook();
         updateHUD();
@@ -938,13 +936,26 @@ window.addEventListener(
 
         console.log("Crazy Fishing Simulator Ready");
         
-        // 3. SEMBUNYIKAN LAYAR LOADING AGAR TIDAK STUCK
+        // Sembunyikan layar loading awal jika ada
         const loadingScreen = document.getElementById("loadingScreen");
         if (loadingScreen) {
-            loadingScreen.style.display = "none"; 
-            console.log("Loading screen hidden successfully.");
-        } else {
-            console.warn("Elemen #loadingScreen tidak ditemukan di HTML.");
+            loadingScreen.style.display = "none";
+        }
+
+        // ==========================================
+        // PERBAIKAN: Fungsi Tombol Lanjutkan Tangkapan
+        // ==========================================
+        const continueBtn = document.getElementById("continueBtn");
+        if (continueBtn) {
+            continueBtn.addEventListener("click", () => {
+                const catchModal = document.getElementById("catchModal");
+                if (catchModal) {
+                    // Menyembunyikan modal hasil ikan
+                    catchModal.style.display = "none"; 
+                    catchModal.classList.add("hidden");
+                    console.log("Modal hasil tangkapan berhasil ditutup!");
+                }
+            });
         }
     }
 );
