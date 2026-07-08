@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+
+    <title>Crazy Fishing Simulator</title>
+
+    <meta name="description" content="Crazy Fishing Simulator - Game Memancing Online">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icons/icon-192.png">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+<!-- Splash Screen -->
+<div id="loadingScreen">
+    <div class="loader"></div>
+    <h1>Crazy Fishing Simulator</h1>
+    <p>Loading...</p>
+</div>
+
+<!-- Kamera -->
+<video
+    id="camera"
+    autoplay
+    playsinline
+    muted>
+</video>
+
+<!-- Canvas Game -->
+<canvas id="gameCanvas"></canvas>
+
+<!-- HUD -->
+<div id="hud">
+
+    <div class="topLeft">
+
+        <button id="cameraBtn">
+            📷
+        </button>
+
+        <button id="menuBtn">
+            ☰
+        </button>
+
+    </div>
+
+    <div class="topRight">
+
+        <div class="money">
+            💰
+            <span id="money">
+                0
+            </span>
+        </div>
+
+        <div class="level">
+            ⭐
+            <span id="level">
+                1
+            </span>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Bottom Action -->
+<div id="bottomPanel">
+
+    <button id="castBtn">
+        🎣 Lempar Kail
+    </button>
+
+    <button id="pullBtn" class="hidden">
+        Tarik!
+    </button>
+
+</div>
+
+<!-- Challenge -->
+<div id="challengeBar" class="hidden">
+    <div id="challengeProgress"></div>
+</div>
+
+<!-- Modal Hasil -->
+<div id="catchModal" class="hidden">
+
+    <div class="card">
+
+        <h2>HASIL TANGKAPAN</h2>
+
+        <div id="playerName"></div>
+
+        <div id="fishEmoji">
+            🐟
+        </div>
+
+        <h1 id="fishName">
+            Ikan
+        </h1>
+
+        <div id="fishRank">
+            Rare
+        </div>
+
+        <div id="fishWeight">
+            1.25 Kg
+        </div>
+
+        <div id="fishLength">
+            45 cm
+        </div>
+
+        <div id="fishPrice">
+            Rp 0
+        </div>
+
+        <div id="catchDate"></div>
+
+        <img
+            id="playerPhoto"
+            src=""
+            alt=""
+        >
+
+        <div class="buttonGroup">
+
+            <button id="downloadBtn">
+                📥 Download
+            </button>
+
+            <button id="shareBtn">
+                📲 WhatsApp
+            </button>
+
+        </div>
+
+        <button id="continueBtn">
+            Lanjut
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Inventory -->
+<div id="inventoryPanel" class="panel hidden">
+
+    <h2>Inventory</h2>
+
+    <div id="inventoryList"></div>
+
+</div>
+
+<!-- Upgrade -->
+<div id="upgradePanel" class="panel hidden">
+
+    <h2>Upgrade</h2>
+
+    <button id="upgradeRod">
+        Upgrade Pancing
+    </button>
+
+    <button id="upgradeChest">
+        Upgrade Peti
+    </button>
+
+</div>
+
+<!-- Statistik -->
+<div id="statsPanel" class="panel hidden">
+
+    <h2>Statistik</h2>
+
+    <ul>
+
+        <li>Total Ikan :
+            <span id="statFish">
+                0
+            </span>
+        </li>
+
+        <li>Total Uang :
+            <span id="statMoney">
+                0
+            </span>
+        </li>
+
+        <li>Level :
+            <span id="statLevel">
+                1
+            </span>
+        </li>
+
+        <li>XP :
+            <span id="statXP">
+                0
+            </span>
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- Achievement -->
+<div id="achievementPopup" class="hidden">
+
+    🏆 Achievement Unlocked
+
+</div>
+
+<!-- Notification -->
+<div id="notification"></div>
+
+<script src="fish.js"></script>
+<script src="player.js"></script>
+<script src="storage.js"></script>
+<script src="ui.js"></script>
+<script src="game.js"></script>
+<script src="app.js"></script>
+
+<script>
+
+if('serviceWorker' in navigator){
+
+    window.addEventListener('load',()=>{
+
+        navigator.serviceWorker.register('service-worker.js');
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
