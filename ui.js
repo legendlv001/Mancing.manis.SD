@@ -1,43 +1,59 @@
 // ==========================================
-// ui.js
+// ui.js Part 1
 // Crazy Fishing Simulator
 // ==========================================
 
-// Panel
+// -------------------------
+// Ambil Elemen
+// -------------------------
+
+const menuBtn = document.getElementById("menuBtn");
+
 const inventoryPanel = document.getElementById("inventoryPanel");
 const upgradePanel = document.getElementById("upgradePanel");
 const statsPanel = document.getElementById("statsPanel");
+const settingsPanel = document.getElementById("settingsPanel");
+const aboutPanel = document.getElementById("aboutPanel");
 const catchModal = document.getElementById("catchModal");
 
-// List Inventory
-const inventoryList = document.getElementById("inventoryList");
-
-// Notification
 const notification = document.getElementById("notification");
-
-// Achievement
 const achievementPopup = document.getElementById("achievementPopup");
 
-// Inventory Global
-let inventory = [];
+// -------------------------
+// Tutup Semua Panel
+// -------------------------
 
-// ==========================================
-// Toggle Panel
-// ==========================================
+function closeAllPanels(){
 
-function hideAllPanels(){
+    [
+        inventoryPanel,
+        upgradePanel,
+        statsPanel,
+        settingsPanel,
+        aboutPanel,
+        catchModal
 
-    inventoryPanel.classList.add("hidden");
-    upgradePanel.classList.add("hidden");
-    statsPanel.classList.add("hidden");
+    ].forEach(panel=>{
+
+        if(panel){
+
+            panel.classList.add("hidden");
+
+        }
+
+    });
 
 }
+
+// -------------------------
+// Toggle Panel
+// -------------------------
 
 function toggleInventory(){
 
     const open = inventoryPanel.classList.contains("hidden");
 
-    hideAllPanels();
+    closeAllPanels();
 
     if(open){
 
@@ -51,7 +67,7 @@ function toggleUpgrade(){
 
     const open = upgradePanel.classList.contains("hidden");
 
-    hideAllPanels();
+    closeAllPanels();
 
     if(open){
 
@@ -65,7 +81,7 @@ function toggleStats(){
 
     const open = statsPanel.classList.contains("hidden");
 
-    hideAllPanels();
+    closeAllPanels();
 
     if(open){
 
@@ -75,18 +91,191 @@ function toggleStats(){
 
 }
 
+function toggleSettings(){
+
+    const open = settingsPanel.classList.contains("hidden");
+
+    closeAllPanels();
+
+    if(open){
+
+        settingsPanel.classList.remove("hidden");
+
+    }
+
+}
+
+function toggleAbout(){
+
+    const open = aboutPanel.classList.contains("hidden");
+
+    closeAllPanels();
+
+    if(open){
+
+        aboutPanel.classList.remove("hidden");
+
+    }
+
+}
+
+// -------------------------
+// Catch Modal
+// -------------------------
+
+function openCatchModal(){
+
+    catchModal.classList.remove("hidden");
+
+}
+
+function closeCatchModal(){
+
+    catchModal.classList.add("hidden");
+
+}
+
+// -------------------------
+// Menu Button
+// -------------------------
+
+if(menuBtn){
+
+    menuBtn.onclick = function(){
+
+        toggleSettings();
+
+    };
+
+}
+
+// -------------------------
+// Klik Luar Panel
+// -------------------------
+
+window.addEventListener("click",function(e){
+
+    if(e.target===catchModal){
+
+        closeCatchModal();
+
+    }
+
+});
+
+// -------------------------
+// Tombol Escape
+// -------------------------
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key==="Escape"){
+
+        closeAllPanels();
+
+    }
+
+});
+
+// -------------------------
+// Notification
+// -------------------------
+
+function showNotification(text){
+
+    notification.innerText = text;
+
+    notification.classList.remove("hidden");
+
+    setTimeout(function(){
+
+        notification.classList.add("hidden");
+
+    },3000);
+
+}
+
+// -------------------------
+// Achievement Popup
+// -------------------------
+
+function showAchievement(title){
+
+    achievementPopup.innerHTML =
+    "🏆 " + title;
+
+    achievementPopup.classList.remove("hidden");
+
+    setTimeout(function(){
+
+        achievementPopup.classList.add("hidden");
+
+    },4000);
+
+}
+
+// -------------------------
+// Saat Halaman Dibuka
+// -------------------------
+
+window.addEventListener("load",function(){
+
+    closeAllPanels();
+
+});
+
 // ==========================================
-// Inventory
+// ui.js Part 2
+// Inventory, Statistik, XP & Achievement
 // ==========================================
+
+// -------------------------
+// INVENTORY
+// -------------------------
+
+let inventory = [];
+
+function addFish(fish){
+
+    inventory.push(fish);
+
+    updateInventory();
+
+    updateStats();
+
+}
+
+function removeFish(index){
+
+    inventory.splice(index,1);
+
+    updateInventory();
+
+    updateStats();
+
+}
+
+function clearInventory(){
+
+    inventory = [];
+
+    updateInventory();
+
+    updateStats();
+
+}
 
 function updateInventory(){
 
-    inventoryList.innerHTML="";
+    const list = document.getElementById("inventoryList");
+
+    if(!list) return;
+
+    list.innerHTML = "";
 
     if(inventory.length===0){
 
-        inventoryList.innerHTML=
-        "<p>Belum ada hasil tangkapan.</p>";
+        list.innerHTML="<p>Belum ada ikan.</p>";
 
         return;
 
@@ -96,69 +285,39 @@ function updateInventory(){
 
         const item=document.createElement("div");
 
-        item.className="inventory-item";
+        item.className="inventoryItem";
 
         item.innerHTML=`
 
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.15);">
+        <b>${fish.name}</b><br>
 
-                <div>
+        Berat : ${fish.weight} Kg<br>
 
-                    <div style="font-size:30px">${fish.emoji}</div>
+        Harga : Rp ${fish.price.toLocaleString()}<br>
 
-                </div>
+        <button onclick="removeFish(${index})">
 
-                <div style="flex:1;margin-left:12px">
+        Hapus
 
-                    <b>${fish.name}</b><br>
-
-                    ${fish.weight} Kg<br>
-
-                    ${fish.length} cm<br>
-
-                    ${fish.rarity}
-
-                </div>
-
-                <div>
-
-                    Rp ${fish.price.toLocaleString("id-ID")}
-
-                </div>
-
-            </div>
+        </button>
 
         `;
 
-        inventoryList.appendChild(item);
+        list.appendChild(item);
 
     });
 
 }
 
-// ==========================================
-// Tambah Inventory
-// ==========================================
-
-function addInventory(fish){
-
-    inventory.push(fish);
-
-    updateInventory();
-
-    saveGame();
-
-}
-
-// ==========================================
-// Jual Semua
-// ==========================================
+// -------------------------
+// JUAL SEMUA
+// -------------------------
 
 function sellAllFish(){
 
     if(inventory.length===0){
 
-        showNotification("Tidak ada ikan.");
+        showNotification("Inventory kosong.");
 
         return;
 
@@ -172,111 +331,383 @@ function sellAllFish(){
 
     });
 
-    addMoney(total);
+    if(typeof player!=="undefined"){
 
-    inventory=[];
+        player.money+=total;
 
-    updateInventory();
+    }
 
-    saveGame();
+    clearInventory();
 
-    showNotification(
+    updateMoney();
 
-        "Semua ikan terjual!"
-
-    );
+    showNotification("Berhasil menjual semua ikan!");
 
 }
 
-// ==========================================
-// Notification
-// ==========================================
+// -------------------------
+// MONEY
+// -------------------------
 
-function showNotification(text){
+function updateMoney(){
 
-    notification.textContent=text;
+    const el=document.getElementById("money");
 
-    notification.classList.remove("hidden");
+    if(!el || typeof player==="undefined") return;
 
-    clearTimeout(notification.timer);
-
-    notification.timer=setTimeout(()=>{
-
-        notification.classList.add("hidden");
-
-    },2500);
+    el.textContent=player.money.toLocaleString();
 
 }
 
-// ==========================================
-// Achievement
-// ==========================================
+// -------------------------
+// LEVEL
+// -------------------------
 
-function showAchievement(text){
+function updateLevel(){
 
-    achievementPopup.innerHTML=
+    if(typeof player==="undefined") return;
 
-        "🏆<br>"+text;
-
-    achievementPopup.classList.remove("hidden");
-
-    setTimeout(()=>{
-
-        achievementPopup.classList.add("hidden");
-
-    },3500);
+    document.getElementById("level").textContent=player.level;
 
 }
 
-// ==========================================
-// Modal Hasil
-// ==========================================
+// -------------------------
+// XP
+// -------------------------
 
-function closeCatchModal(){
+function updateXP(){
 
-    catchModal.classList.add("hidden");
+    if(typeof player==="undefined") return;
+
+    const fill=document.getElementById("xpFill");
+
+    const percent=(player.xp/player.maxXP)*100;
+
+    fill.style.width=percent+"%";
 
 }
 
-function openCatchModal(){
-
-    catchModal.classList.remove("hidden");
-
-}
-
-// ==========================================
-// Update Statistik
-// ==========================================
+// -------------------------
+// STATISTIK
+// -------------------------
 
 function updateStats(){
 
+    if(typeof player==="undefined") return;
+
     document.getElementById("statMoney").textContent=
-    player.money.toLocaleString("id-ID");
+
+    player.money.toLocaleString();
 
     document.getElementById("statFish").textContent=
-    player.fishCaught;
+
+    inventory.length;
 
     document.getElementById("statLevel").textContent=
+
     player.level;
 
     document.getElementById("statXP").textContent=
-    player.xp+" / "+player.xpMax;
+
+    player.xp+" / "+player.maxXP;
 
 }
 
-// ==========================================
-// Event
-// ==========================================
+// -------------------------
+// ACHIEVEMENT
+// -------------------------
 
-document.getElementById("menuBtn").onclick=toggleInventory;
+let achievements=[];
 
-document.getElementById("continueBtn").onclick=
-closeCatchModal;
+function unlockAchievement(name){
+
+    if(achievements.includes(name)) return;
+
+    achievements.push(name);
+
+    showAchievement(name);
+
+    refreshAchievementList();
+
+}
+
+function refreshAchievementList(){
+
+    const box=document.getElementById("achievementList");
+
+    if(!box) return;
+
+    box.innerHTML="";
+
+    achievements.forEach(a=>{
+
+        const p=document.createElement("p");
+
+        p.textContent="🏆 "+a;
+
+        box.appendChild(p);
+
+    });
+
+}
+
+// -------------------------
+// LOAD UI
+// -------------------------
 
 window.addEventListener("load",()=>{
 
     updateInventory();
 
+    updateMoney();
+
+    updateLevel();
+
+    updateXP();
+
     updateStats();
 
 });
+
+// ==========================================
+// ui.js Part 3
+// Backup, Share, Download, PWA, Audio
+// ==========================================
+
+// -------------------------
+// DOWNLOAD HASIL TANGKAPAN
+// -------------------------
+
+async function downloadCatch(){
+
+    const card = document.querySelector("#catchModal .card");
+
+    if(!card) return;
+
+    const canvas = await html2canvas(card);
+
+    const link = document.createElement("a");
+
+    link.download = "hasil-tangkapan.png";
+
+    link.href = canvas.toDataURL("image/png");
+
+    link.click();
+
+}
+
+// -------------------------
+// SHARE
+// -------------------------
+
+async function shareCatch(){
+
+    const card = document.querySelector("#catchModal .card");
+
+    if(!card) return;
+
+    const canvas = await html2canvas(card);
+
+    canvas.toBlob(async(blob)=>{
+
+        const file = new File(
+            [blob],
+            "hasil-tangkapan.png",
+            {type:"image/png"}
+        );
+
+        if(
+            navigator.canShare &&
+            navigator.canShare({files:[file]})
+        ){
+
+            await navigator.share({
+
+                title:"Crazy Fishing Simulator",
+
+                text:"Lihat hasil tangkapanku!",
+
+                files:[file]
+
+            });
+
+        }else{
+
+            alert("Browser tidak mendukung Share.");
+
+        }
+
+    });
+
+}
+
+// -------------------------
+// AUDIO
+// -------------------------
+
+const bgm=document.getElementById("bgm");
+
+let musicOn=true;
+
+function toggleMusic(){
+
+    if(!bgm) return;
+
+    musicOn=!musicOn;
+
+    if(musicOn){
+
+        bgm.play().catch(()=>{});
+
+    }else{
+
+        bgm.pause();
+
+    }
+
+}
+
+// -------------------------
+// BACKUP
+// -------------------------
+
+function backupNow(){
+
+    if(typeof saveGame==="function"){
+
+        saveGame();
+
+    }
+
+    showNotification("Backup berhasil");
+
+}
+
+// -------------------------
+// EXPORT SAVE
+// -------------------------
+
+function exportSave(){
+
+    const data=localStorage.getItem("crazyFishingSave");
+
+    if(!data){
+
+        showNotification("Tidak ada data.");
+
+        return;
+
+    }
+
+    const blob=new Blob(
+        [data],
+        {type:"application/json"}
+    );
+
+    const link=document.createElement("a");
+
+    link.href=URL.createObjectURL(blob);
+
+    link.download="savegame.json";
+
+    link.click();
+
+}
+
+// -------------------------
+// IMPORT SAVE
+// -------------------------
+
+function importSave(file){
+
+    if(!file) return;
+
+    const reader=new FileReader();
+
+    reader.onload=function(){
+
+        localStorage.setItem(
+
+            "crazyFishingSave",
+
+            reader.result
+
+        );
+
+        location.reload();
+
+    };
+
+    reader.readAsText(file);
+
+}
+
+// -------------------------
+// RESET
+// -------------------------
+
+function deleteSave(){
+
+    if(!confirm("Reset game?")) return;
+
+    localStorage.removeItem(
+
+        "crazyFishingSave"
+
+    );
+
+    location.reload();
+
+}
+
+// -------------------------
+// PWA INSTALL
+// -------------------------
+
+let deferredPrompt=null;
+
+window.addEventListener(
+
+"beforeinstallprompt",
+
+e=>{
+
+    e.preventDefault();
+
+    deferredPrompt=e;
+
+}
+
+);
+
+async function installApp(){
+
+    if(!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    await deferredPrompt.userChoice;
+
+    deferredPrompt=null;
+
+}
+
+// -------------------------
+// BUTTON
+// -------------------------
+
+const downloadBtn=document.getElementById("downloadBtn");
+
+const shareBtn=document.getElementById("shareBtn");
+
+if(downloadBtn){
+
+    downloadBtn.onclick=downloadCatch;
+
+}
+
+if(shareBtn){
+
+    shareBtn.onclick=shareCatch;
+
+}
