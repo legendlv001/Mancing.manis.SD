@@ -584,6 +584,10 @@ if(pullBtn){
     pullBtn.classList.add("hidden");
 }
 
+// PERBAIKAN: Munculkan kembali tombol lempar kail setelah ikan didapat
+if(castBtn){
+    castBtn.classList.remove("hidden");
+}
 }
 
 // ==============================
