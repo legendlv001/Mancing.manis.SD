@@ -920,7 +920,7 @@ setInterval(() => {
 
 
 // ==============================
-// Start Game
+// Start Game (Ganti dari Baris 583 sampai Paling Bawah)
 // ==============================
 window.addEventListener(
     "load",
@@ -944,22 +944,36 @@ window.addEventListener(
         }
 
         // ==========================================
-        // PERBAIKAN FINAL: Fungsi Tombol Lanjutkan
+        // PERBAIKAN TOTAL: Fungsi Tombol Lanjutkan
         // ==========================================
         const continueBtn = document.getElementById("continueBtn");
-        if (continueBtn) {
+        const catchModal = document.getElementById("catchModal");
+
+        if (continueBtn && catchModal) {
             continueBtn.addEventListener("click", () => {
-                const catchModal = document.getElementById("catchModal");
-                if (catchModal) {
-                    // Cukup gunakan class 'hidden' agar bisa dibuka kembali nanti
-                    catchModal.classList.add("hidden");
-                    
-                    // Pastikan style display inline-nya dihapus/direset agar ikan ke-2 dst bisa muncul
-                    catchModal.style.display = ""; 
-                    
-                    console.log("Modal ditutup & direset untuk tangkapan berikutnya!");
-                }
+                // Sembunyikan dengan memanipulasi style secara mentah (raw style) agar aman
+                catchModal.style.setProperty("display", "none", "important");
+                console.log("Modal berhasil ditutup.");
             });
+        }
+
+        // ==========================================
+        // PERBAIKAN TOTAL: Memaksa Modal Muncul Kembali
+        // ==========================================
+        // Kita membajak fungsi showCatchResult bawaan agar dipaksa muncul setiap dapat ikan
+        if (typeof showCatchResult === "function") {
+            const originalShowCatchResult = showCatchResult;
+            showCatchResult = function(fish) {
+                // Panggil fungsi asli bawaan kamu untuk mengisi data teks ikan
+                originalShowCatchResult(fish);
+                
+                // Paksa modalnya tampil di layar, tidak peduli apa yang terjadi sebelumnya
+                if (catchModal) {
+                    catchModal.classList.remove("hidden");
+                    catchModal.style.setProperty("display", "flex", "important");
+                    console.log("Modal dipaksa muncul untuk ikan: " + fish.name);
+                }
+            };
         }
     }
 );
