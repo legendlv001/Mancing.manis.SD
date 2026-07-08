@@ -285,24 +285,6 @@ function distance(x1,y1,x2,y2){
 
     );
 
-}
-
-// ==============================
-// Start
-// ==============================
-
-window.addEventListener(
-
-    "load",
-
-    ()=>{
-
-        startCamera();
-
-    }
-
-);
-
 // ==========================================
 // game.js FINAL
 // Part 2 - Fish System
