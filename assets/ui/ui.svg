@@ -1,0 +1,122 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920">
+
+  <defs>
+
+    <linearGradient id="btn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+
+  </defs>
+
+  <!-- HUD Atas -->
+  <rect
+      x="30"
+      y="30"
+      width="420"
+      height="90"
+      rx="25"
+      fill="url(#panel)"
+      opacity="0.9"/>
+
+  <text
+      x="60"
+      y="88"
+      fill="white"
+      font-size="42"
+      font-family="Arial"
+      font-weight="bold">
+      💰 999.999
+  </text>
+
+  <rect
+      x="630"
+      y="30"
+      width="420"
+      height="90"
+      rx="25"
+      fill="url(#panel)"
+      opacity="0.9"/>
+
+  <text
+      x="680"
+      y="88"
+      fill="white"
+      font-size="42"
+      font-family="Arial"
+      font-weight="bold">
+      ⭐ Lv.25
+  </text>
+
+  <!-- XP Bar -->
+  <rect
+      x="140"
+      y="150"
+      width="800"
+      height="35"
+      rx="18"
+      fill="#334155"/>
+
+  <rect
+      x="140"
+      y="150"
+      width="520"
+      height="35"
+      rx="18"
+      fill="#22c55e"/>
+
+  <!-- Tombol Lempar -->
+  <rect
+      x="240"
+      y="1700"
+      width="600"
+      height="120"
+      rx="60"
+      fill="url(#btn)"/>
+
+  <text
+      x="540"
+      y="1778"
+      fill="white"
+      text-anchor="middle"
+      font-size="50"
+      font-family="Arial"
+      font-weight="bold">
+      🎣 LEMPAR KAIL
+  </text>
+
+  <!-- Panel Inventory -->
+  <rect
+      x="70"
+      y="380"
+      width="940"
+      height="1000"
+      rx="35"
+      fill="url(#panel)"
+      opacity="0.92"/>
+
+  <text
+      x="540"
+      y="455"
+      fill="white"
+      text-anchor="middle"
+      font-size="48"
+      font-family="Arial"
+      font-weight="bold">
+      INVENTORY
+  </text>
+
+  <!-- Slot -->
+  <rect x="120" y="520" width="840" height="120" rx="18" fill="#334155"/>
+  <rect x="120" y="670" width="840" height="120" rx="18" fill="#334155"/>
+  <rect x="120" y="820" width="840" height="120" rx="18" fill="#334155"/>
+  <rect x="120" y="970" width="840" height="120" rx="18" fill="#334155"/>
+  <rect x="120" y="1120" width="840" height="120" rx="18" fill="#334155"/>
+
+</svg>
