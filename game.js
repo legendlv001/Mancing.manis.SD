@@ -7,6 +7,20 @@
 "use strict";
 
 // ==============================
+// Audio
+// ==============================
+
+const castSound = new Audio("assets/sounds/cast.mp3");
+const hookSound = new Audio("assets/sounds/hook.mp3");
+const catchSound = new Audio("assets/sounds/catch.mp3");
+const clickSound = new Audio("assets/sounds/click.mp3");
+const levelupSound = new Audio("assets/sounds/levelup.mp3");
+const bgmSound = new Audio("assets/sounds/bgm.mp3");
+
+bgmSound.loop = true;
+bgmSound.volume = 0.3;
+
+// ==============================
 // Canvas
 // ==============================
 
