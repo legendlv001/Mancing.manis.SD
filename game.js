@@ -251,8 +251,12 @@ function updateHook(){
         if(hook.y>=hook.maxDepth){
 
             hook.y = hook.maxDepth; // Kunci posisi kail di dasar
-            hook.casting = false;   // Hentikan proses jatuh, tapi JANGAN buat hook.pulling = true
+            hook.casting = false;   // Hentikan proses jatuh
 
+            // PERBAIKAN: Memunculkan tombol tarik saat kail di dasar
+            if (pullBtn) {
+                pullBtn.classList.remove("hidden");
+            }
         }
 
     }
