@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920">
+
+<rect
+width="1080"
+height="1920"
+fill="#020617"/>
+
+<circle cx="100" cy="200" r="2" fill="white"/>
+<circle cx="250" cy="350" r="3" fill="white"/>
+<circle cx="600" cy="150" r="2" fill="white"/>
+<circle cx="800" cy="500" r="4" fill="white"/>
+<circle cx="980" cy="120" r="2" fill="white"/>
+<circle cx="420" cy="720" r="3" fill="white"/>
+<circle cx="730" cy="910" r="2" fill="white"/>
+<circle cx="210" cy="1020" r="4" fill="white"/>
+
+</svg>
