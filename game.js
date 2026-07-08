@@ -46,13 +46,6 @@ const camera = document.getElementById("camera");
 const castBtn = document.getElementById("castBtn");
 const pullBtn = document.getElementById("pullBtn");
 
-// ==============================
-// Audio
-// ==============================
-
-const castSound = document.getElementById("castSound");
-const hookSound = document.getElementById("hookSound");
-const catchSound = document.getElementById("catchSound");
 
 // ==============================
 // Resize
