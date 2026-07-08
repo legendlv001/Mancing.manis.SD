@@ -1,255 +1,114 @@
-// ======================================
-// Crazy Fishing Simulator
+// ==========================================
 // app.js
-// ======================================
+// Crazy Fishing Simulator
+// ==========================================
 
-const video = document.getElementById("camera");
-const loadingScreen = document.getElementById("loadingScreen");
+"use strict";
 
-const moneyEl = document.getElementById("money");
-const levelEl = document.getElementById("level");
+// ==========================================
+// APP
+// ==========================================
 
-const castBtn = document.getElementById("castBtn");
-const pullBtn = document.getElementById("pullBtn");
+const APP = {
 
-const downloadBtn = document.getElementById("downloadBtn");
-const shareBtn = document.getElementById("shareBtn");
-const continueBtn = document.getElementById("continueBtn");
+    version: "1.0.0",
 
-const notification = document.getElementById("notification");
+    initialized: false
 
-const inventoryPanel = document.getElementById("inventoryPanel");
-const upgradePanel = document.getElementById("upgradePanel");
-const statsPanel = document.getElementById("statsPanel");
-
-const menuBtn = document.getElementById("menuBtn");
-const cameraBtn = document.getElementById("cameraBtn");
-
-let useFrontCamera = true;
-
-const player = {
-    name: "Player",
-    level: 1,
-    xp: 0,
-    money: 0
 };
 
-async function initCamera() {
+// ==========================================
+// INIT
+// ==========================================
 
-    try {
+async function initApp() {
 
-        if(video.srcObject){
+    if (APP.initialized) return;
 
-            video.srcObject.getTracks().forEach(track=>track.stop());
+    APP.initialized = true;
 
-        }
+    console.log("Crazy Fishing Simulator");
 
-        const stream = await navigator.mediaDevices.getUserMedia({
+    console.log("Version:", APP.version);
 
-            video:{
-                facingMode:useFrontCamera?"user":"environment"
-            },
+    loadPlayer();
 
-            audio:false
+    loadInventory();
 
-        });
+    loadSettings();
 
-        video.srcObject = stream;
+    registerServiceWorker();
 
-    } catch(err){
+    installPrompt();
 
-        console.error(err);
+}
 
-        showNotification("Kamera tidak tersedia");
+// ==========================================
+// Load Data
+// ==========================================
+
+function loadPlayer() {
+
+    if (typeof loadGame === "function") {
+
+        loadGame();
 
     }
 
 }
 
-cameraBtn.onclick = ()=>{
+function loadInventory() {
 
-    useFrontCamera=!useFrontCamera;
+    if (typeof loadInventoryData === "function") {
 
-    initCamera();
-
-};
-
-window.addEventListener("load",()=>{
-
-    initCamera();
-
-    updateHUD();
-
-    setTimeout(()=>{
-
-        loadingScreen.style.display="none";
-
-    },1500);
-
-});
-
-function updateHUD(){
-
-    moneyEl.textContent = player.money.toLocaleString("id-ID");
-
-    levelEl.textContent = player.level;
-
-}
-
-function showNotification(text){
-
-    notification.textContent=text;
-
-    notification.classList.remove("hidden");
-
-    setTimeout(()=>{
-
-        notification.classList.add("hidden");
-
-    },2500);
-
-}
-
-menuBtn.onclick=()=>{
-
-    inventoryPanel.classList.toggle("hidden");
-
-};
-
-castBtn.onclick=()=>{
-
-    if(typeof startFishing==="function"){
-
-        startFishing();
+        loadInventoryData();
 
     }
 
-};
+}
 
-pullBtn.onclick=()=>{
+function loadSettings() {
 
-    if(typeof pullFishing==="function"){
+    const sound = localStorage.getItem("sound");
 
-        pullFishing();
+    const music = localStorage.getItem("music");
+
+    if (sound !== null) {
+
+        player.sound = sound === "true";
 
     }
 
-};
+    if (music !== null) {
 
-continueBtn.onclick=()=>{
-
-    document.getElementById("catchModal").classList.add("hidden");
-
-};
-
-downloadBtn.onclick = async ()=>{
-
-    const card=document.querySelector("#catchModal .card");
-
-    if(!card) return;
-
-    const canvas=await html2canvas(card,{scale:2});
-
-    const a=document.createElement("a");
-
-    a.download="hasil-tangkapan.png";
-
-    a.href=canvas.toDataURL("image/png");
-
-    a.click();
-
-};
-
-shareBtn.onclick = async ()=>{
-
-    const card=document.querySelector("#catchModal .card");
-
-    if(!card) return;
-
-    const canvas=await html2canvas(card,{scale:2});
-
-    canvas.toBlob(async(blob)=>{
-
-        const file=new File([blob],"hasil-tangkapan.png",{
-
-            type:"image/png"
-
-        });
-
-        if(navigator.canShare && navigator.canShare({files:[file]})){
-
-            await navigator.share({
-
-                title:"Crazy Fishing Simulator",
-
-                text:"Lihat hasil tangkapanku!",
-
-                files:[file]
-
-            });
-
-        }else{
-
-            showNotification("Browser belum mendukung Share");
-
-        }
-
-    });
-
-};
-
-function addMoney(value){
-
-    player.money+=value;
-
-    updateHUD();
-
-    if(typeof saveGame==="function"){
-
-        saveGame();
+        player.music = music === "true";
 
     }
 
 }
 
-function addXP(value){
+// ==========================================
+// Install PWA
+// ==========================================
 
-    player.xp+=value;
+let deferredPrompt = null;
 
-    if(player.xp>=100){
+window.addEventListener(
 
-        player.xp=0;
+    "beforeinstallprompt",
 
-        player.level++;
+    (e) => {
 
-        showNotification("Naik Level!");
+        e.preventDefault();
+
+        deferredPrompt = e;
 
     }
 
-    updateHUD();
+);
 
-}
+async function installPrompt() {
 
-function toggleInventory(){
+    const btn = document.getElementById("installBtn");
 
-    inventoryPanel.classList.toggle("hidden");
-
-}
-
-function toggleUpgrade(){
-
-    upgradePanel.classList.toggle("hidden");
-
-}
-
-function toggleStats(){
-
-    statsPanel.classList.toggle("hidden");
-
-}
-
-if("serviceWorker" in navigator){
-
-    navigator.serviceWorker.register("service-worker.js");
-
-}
+   
