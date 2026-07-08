@@ -918,6 +918,7 @@ setInterval(() => {
 
 }, 30000);
 
+
 // ==============================
 // Start Game
 // ==============================
@@ -943,17 +944,20 @@ window.addEventListener(
         }
 
         // ==========================================
-        // PERBAIKAN: Fungsi Tombol Lanjutkan Tangkapan
+        // PERBAIKAN FINAL: Fungsi Tombol Lanjutkan
         // ==========================================
         const continueBtn = document.getElementById("continueBtn");
         if (continueBtn) {
             continueBtn.addEventListener("click", () => {
                 const catchModal = document.getElementById("catchModal");
                 if (catchModal) {
-                    // Menyembunyikan modal hasil ikan
-                    catchModal.style.display = "none"; 
+                    // Cukup gunakan class 'hidden' agar bisa dibuka kembali nanti
                     catchModal.classList.add("hidden");
-                    console.log("Modal hasil tangkapan berhasil ditutup!");
+                    
+                    // Pastikan style display inline-nya dihapus/direset agar ikan ke-2 dst bisa muncul
+                    catchModal.style.display = ""; 
+                    
+                    console.log("Modal ditutup & direset untuk tangkapan berikutnya!");
                 }
             });
         }
