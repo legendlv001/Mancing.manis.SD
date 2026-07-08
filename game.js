@@ -923,21 +923,28 @@ setInterval(() => {
 // ==============================
 
 window.addEventListener(
-
     "load",
-
     () => {
+        // 1. Jalankan inisialisasi aplikasi dari app.js terlebih dahulu
+        if (typeof initApp === "function") {
+            initApp(); 
+        }
 
+        // 2. Jalankan fungsi core game yang sudah kamu buat
         startCamera();
-
         resetHook();
-
         updateHUD();
-
         gameLoop();
 
         console.log("Crazy Fishing Simulator Ready");
-
+        
+        // 3. SEMBUNYIKAN LAYAR LOADING AGAR TIDAK STUCK
+        const loadingScreen = document.getElementById("loadingScreen");
+        if (loadingScreen) {
+            loadingScreen.style.display = "none"; 
+            console.log("Loading screen hidden successfully.");
+        } else {
+            console.warn("Elemen #loadingScreen tidak ditemukan di HTML.");
+        }
     }
-
 );
