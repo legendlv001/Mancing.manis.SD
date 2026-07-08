@@ -1,6 +1,5 @@
 // ==========================================
-// game.js FINAL
-// Part 1 - Core
+// game.js FINAL LENGKAP
 // Crazy Fishing Simulator
 // ==========================================
 
@@ -34,10 +33,11 @@ const ctx = canvas.getContext("2d");
 const renderer = new FishRenderer(ctx);
 
 // ==============================
-// Video
+// Video & Kamera
 // ==============================
 
 const camera = document.getElementById("camera");
+let localStream = null; // Menampung aliran video kamera secara global
 
 // ==============================
 // Tombol
@@ -64,7 +64,7 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 // ==============================
-// Kamera
+// Fungsi Menghidupkan Kamera
 // ==============================
 
 async function startCamera(){
@@ -83,7 +83,9 @@ async function startCamera(){
 
         });
 
+        localStream = stream; // Simpan aliran video ke variabel global
         camera.srcObject = stream;
+        camera.style.display = "block"; // Munculkan elemen kamera
 
     }catch(err){
 
@@ -91,6 +93,20 @@ async function startCamera(){
 
     }
 
+}
+
+// ==============================
+// Fungsi Mematikan Kamera
+// ==============================
+
+function stopCamera() {
+    if (localStream) {
+        // Matikan semua komponen video (hardware kamera) agar hemat baterai
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+    camera.srcObject = null;
+    camera.style.display = "none"; // Sembunyikan elemen kamera agar layar bersih
 }
 
 // ==============================
@@ -148,12 +164,12 @@ function resetHook(){
 resetHook();
 
 // ==============================
-// Background (Ubah fungsi ini agar transparan)
+// Background
 // ==============================
 
 function drawBackground(){
 
-    // Menghapus frame lama dan membuat canvas menjadi transparan murni
+    // Menghapus frame lama dan membuat canvas menjadi transparan murni agar kamera tembus
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 }
@@ -226,7 +242,7 @@ function updateHook(){
             hook.y = hook.maxDepth; // Kunci posisi kail di dasar
             hook.casting = false;   // Hentikan proses jatuh
 
-            // PERBAIKAN: Memunculkan tombol tarik saat kail di dasar
+            // Memunculkan tombol tarik saat kail di dasar
             if (pullBtn) {
                 pullBtn.classList.remove("hidden");
             }
@@ -264,7 +280,6 @@ function distance(x1,y1,x2,y2){
 }
 
 // ==========================================
-// game.js FINAL
 // Part 2 - Fish System
 // ==========================================
 
@@ -349,7 +364,7 @@ function drawFish(){
 }
 
 // ==============================
-// Lempar Kail (Ganti fungsi bawaan kamu dengan ini)
+// Lempar Kail
 // ==============================
 
 function castLine(){
@@ -378,13 +393,13 @@ function castLine(){
 }
 
 // ==============================
-// Tarik Kail (Ganti fungsi bawaan kamu dengan ini)
+// Tarik Kail
 // ==============================
 
 function pullLine(){
 
-    // PERBAIKAN: Izinkan kail ditarik walaupun hook.casting sudah false (saat di dasar)
-    if(hook.pulling) return; 
+    // Izinkan kail ditarik walaupun hook.casting sudah false (saat di dasar)
+    if(hook.pulling) return;
 
     hook.casting=false;
 
@@ -437,7 +452,6 @@ function checkStrike(){
 }
 
 // ==============================
-// ==============================
 // Event Button
 // ==============================
 
@@ -455,8 +469,23 @@ if(pullBtn){
     );
 }
 
+// Sakelar ON/OFF Kamera
+const photoBtn = document.getElementById("photoBtn"); 
+if (photoBtn) {
+    photoBtn.addEventListener("click", () => {
+        if (localStream) {
+            stopCamera();
+            photoBtn.textContent = "📷 Hidupkan Kamera";
+            console.log("Kamera dimatikan.");
+        } else {
+            startCamera();
+            photoBtn.textContent = "📷 Matikan Kamera";
+            console.log("Kamera dihidupkan.");
+        }
+    });
+}
+
 // ==========================================
-// game.js FINAL
 // Part 3 - Catch System
 // ==========================================
 
@@ -505,13 +534,12 @@ function catchFish() {
     }
 
     // Achievement
-    // Achievement
-if (
-    typeof unlockAchievement === "function" &&
-    typeof player !== "undefined"
-) {
+    if (
+        typeof unlockAchievement === "function" &&
+        typeof player !== "undefined"
+    ) {
 
-    if (player.totalFish === 1) {
+        if (player.totalFish === 1) {
 
             unlockAchievement("Strike Pertama");
 
@@ -549,18 +577,17 @@ if (
     // Modal hasil
     showCatchResult(fish);
 
-    // Bersihkan ikan
-// Bersihkan ikan
-game.currentFish = null;
+    // Bersihkan ikan & Reset tombol pancingan
+    game.currentFish = null;
 
-if(pullBtn){
-    pullBtn.classList.add("hidden");
-}
+    if(pullBtn){
+        pullBtn.classList.add("hidden");
+    }
 
-// PERBAIKAN: Munculkan kembali tombol lempar kail setelah ikan didapat
-if(castBtn){
-    castBtn.classList.remove("hidden");
-}
+    if(castBtn){
+        castBtn.classList.remove("hidden");
+    }
+
 }
 
 // ==============================
@@ -619,7 +646,7 @@ function checkCatch() {
 
     resetHook();
 
-    // TAMBAHKAN KODE INI: Reset tombol saat kail sudah kembali ke atas air
+    // Reset tombol saat kail sudah kembali ke atas air (kosong/tidak dapat ikan)
     if(castBtn){
         castBtn.classList.remove("hidden");
     }
@@ -646,7 +673,6 @@ function updateGame() {
 }
 
 // ==========================================
-// game.js FINAL
 // Part 4 - Render & Animation
 // ==========================================
 
@@ -815,7 +841,6 @@ function updateFrame() {
 }
 
 // ==========================================
-// game.js FINAL
 // Part 5 - Game Loop & Startup
 // ==========================================
 
@@ -915,12 +940,11 @@ setInterval(() => {
 
 
 // ==============================
-// Start Game (Ganti dari Baris 583 sampai Paling Bawah)
+// Start Game & Perbaikan Modal 
 // ==============================
 window.addEventListener(
     "load",
     () => {
-        // Panggil initApp dari app.js
         if (typeof initApp === "function") {
             initApp(); 
         }
@@ -932,37 +956,28 @@ window.addEventListener(
 
         console.log("Crazy Fishing Simulator Ready");
         
-        // Sembunyikan layar loading awal jika ada
         const loadingScreen = document.getElementById("loadingScreen");
         if (loadingScreen) {
             loadingScreen.style.display = "none";
         }
 
-        // ==========================================
-        // PERBAIKAN TOTAL: Fungsi Tombol Lanjutkan
-        // ==========================================
+        // Penutup Modal Lanjutkan yang Aman
         const continueBtn = document.getElementById("continueBtn");
         const catchModal = document.getElementById("catchModal");
 
         if (continueBtn && catchModal) {
             continueBtn.addEventListener("click", () => {
-                // Sembunyikan dengan memanipulasi style secara mentah (raw style) agar aman
                 catchModal.style.setProperty("display", "none", "important");
                 console.log("Modal berhasil ditutup.");
             });
         }
 
-        // ==========================================
-        // PERBAIKAN TOTAL: Memaksa Modal Muncul Kembali
-        // ==========================================
-        // Kita membajak fungsi showCatchResult bawaan agar dipaksa muncul setiap dapat ikan
+        // Memaksa Modal Muncul Kembali pada Ikan Selanjutnya
         if (typeof showCatchResult === "function") {
             const originalShowCatchResult = showCatchResult;
             showCatchResult = function(fish) {
-                // Panggil fungsi asli bawaan kamu untuk mengisi data teks ikan
                 originalShowCatchResult(fish);
                 
-                // Paksa modalnya tampil di layar, tidak peduli apa yang terjadi sebelumnya
                 if (catchModal) {
                     catchModal.classList.remove("hidden");
                     catchModal.style.setProperty("display", "flex", "important");
