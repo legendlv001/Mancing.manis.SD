@@ -1,110 +1,88 @@
-// ======================================
+// ==========================================
 // player.js
 // Crazy Fishing Simulator
-// ======================================
-
-const PLAYER_SAVE_KEY = "crazyFishingPlayer";
+// ==========================================
 
 const player = {
-    name: "Pemancing",
+
+    // Identitas
+    name: "Player",
+
+    // Level
     level: 1,
     xp: 0,
-    xpMax: 100,
+    maxXP: 100,
 
+    // Uang
     money: 0,
 
-    fishCaught: 0,
-    biggestFish: 0,
-
+    // Upgrade
     rodLevel: 1,
     chestLevel: 1,
 
-    inventorySize: 20,
+    // Statistik
+    totalFish: 0,
+    totalWeight: 0,
+    biggestFish: null,
 
-    achievement: []
+    // Pengaturan
+    sound: true,
+    music: true
+
 };
 
-// ============================
-// Simpan
-// ============================
+// ==========================================
+// Tambah XP
+// ==========================================
 
-function savePlayer(){
+function addXP(amount){
 
-    localStorage.setItem(
+    player.xp += amount;
 
-        PLAYER_SAVE_KEY,
+    while(player.xp >= player.maxXP){
 
-        JSON.stringify(player)
+        player.xp -= player.maxXP;
 
-    );
+        player.level++;
 
-}
+        player.maxXP = Math.floor(player.maxXP * 1.25);
 
-// ============================
-// Load
-// ============================
-
-function loadPlayer(){
-
-    const data = localStorage.getItem(
-
-        PLAYER_SAVE_KEY
-
-    );
-
-    if(data){
-
-        Object.assign(
-
-            player,
-
-            JSON.parse(data)
-
+        showAchievement(
+            "Naik ke Level " + player.level
         );
 
     }
 
-    updatePlayerUI();
+    if(typeof updateXP==="function")
+        updateXP();
+
+    if(typeof updateLevel==="function")
+        updateLevel();
 
 }
 
-// ============================
-// Reset
-// ============================
-
-function resetPlayer(){
-
-    localStorage.removeItem(
-
-        PLAYER_SAVE_KEY
-
-    );
-
-    location.reload();
-
-}
-
-// ============================
-// Tambah uang
-// ============================
+// ==========================================
+// Tambah Uang
+// ==========================================
 
 function addMoney(amount){
 
     player.money += amount;
 
-    updatePlayerUI();
-
-    savePlayer();
+    if(typeof updateMoney==="function")
+        updateMoney();
 
 }
 
-// ============================
-// Kurangi uang
-// ============================
+// ==========================================
+// Kurangi Uang
+// ==========================================
 
 function spendMoney(amount){
 
     if(player.money < amount){
+
+        showNotification("Uang tidak cukup!");
 
         return false;
 
@@ -112,284 +90,103 @@ function spendMoney(amount){
 
     player.money -= amount;
 
-    updatePlayerUI();
-
-    savePlayer();
+    updateMoney();
 
     return true;
 
 }
 
-// ============================
-// Tambah XP
-// ============================
+// ==========================================
+// Tambah Statistik
+// ==========================================
 
-function addXP(amount){
+function addFishStats(fish){
 
-    player.xp += amount;
+    player.totalFish++;
 
-    while(player.xp >= player.xpMax){
-
-        player.xp -= player.xpMax;
-
-        player.level++;
-
-        player.xpMax += 50;
-
-        unlockAchievement(
-
-            "Level " + player.level
-
-        );
-
-        showNotification(
-
-            "⭐ Level Naik!"
-
-        );
-
-    }
-
-    updatePlayerUI();
-
-    savePlayer();
-
-}
-
-// ============================
-// Tambah ikan
-// ============================
-
-function addFish(weight){
-
-    player.fishCaught++;
-
-    if(weight > player.biggestFish){
-
-        player.biggestFish = weight;
-
-    }
-
-    savePlayer();
-
-}
-
-// ============================
-// Achievement
-// ============================
-
-function unlockAchievement(name){
+    player.totalWeight += fish.weight;
 
     if(
 
-        player.achievement.includes(name)
+        !player.biggestFish ||
 
-    ) return;
+        fish.weight >
 
-    player.achievement.push(name);
+        player.biggestFish.weight
 
-    showAchievement(name);
+    ){
 
-}
+        player.biggestFish = fish;
 
-// ============================
-// Popup Achievement
-// ============================
+    }
 
-function showAchievement(name){
-
-    const popup = document.getElementById(
-
-        "achievementPopup"
-
-    );
-
-    if(!popup) return;
-
-    popup.innerHTML =
-
-        "🏆 Achievement<br>" +
-
-        name;
-
-    popup.classList.remove("hidden");
-
-    setTimeout(()=>{
-
-        popup.classList.add("hidden");
-
-    },3000);
+    updateStats();
 
 }
 
-// ============================
+// ==========================================
 // Upgrade Pancing
-// ============================
+// ==========================================
 
 function upgradeRod(){
 
-    const price =
+    const cost = player.rodLevel * 1000;
 
-        player.rodLevel * 500;
-
-    if(!spendMoney(price)){
-
-        showNotification(
-
-            "Uang tidak cukup"
-
-        );
-
-        return;
-
-    }
+    if(!spendMoney(cost)) return;
 
     player.rodLevel++;
 
-    savePlayer();
+    document.getElementById("rodLevel").textContent =
+        player.rodLevel;
 
-    updatePlayerUI();
+    showNotification(
+        "Pancing berhasil di-upgrade!"
+    );
 
 }
 
-// ============================
-// Upgrade Peti
-// ============================
+// ==========================================
+// Upgrade Tas
+// ==========================================
 
 function upgradeChest(){
 
-    const price =
+    const cost = player.chestLevel * 1500;
 
-        player.chestLevel * 700;
-
-    if(!spendMoney(price)){
-
-        showNotification(
-
-            "Uang tidak cukup"
-
-        );
-
-        return;
-
-    }
+    if(!spendMoney(cost)) return;
 
     player.chestLevel++;
 
-    player.inventorySize += 5;
+    document.getElementById("chestLevel").textContent =
+        player.chestLevel;
 
-    savePlayer();
-
-    updatePlayerUI();
+    showNotification(
+        "Tas berhasil di-upgrade!"
+    );
 
 }
 
-// ============================
-// Update UI
-// ============================
+// ==========================================
+// Reset Player
+// ==========================================
 
-function updatePlayerUI(){
+function resetPlayer(){
 
-    const money = document.getElementById(
+    player.level = 1;
+    player.xp = 0;
+    player.maxXP = 100;
+    player.money = 0;
 
-        "money"
+    player.rodLevel = 1;
+    player.chestLevel = 1;
 
-    );
+    player.totalFish = 0;
+    player.totalWeight = 0;
+    player.biggestFish = null;
 
-    if(money){
-
-        money.textContent =
-
-        player.money.toLocaleString("id-ID");
-
-    }
-
-    const level = document.getElementById(
-
-        "level"
-
-    );
-
-    if(level){
-
-        level.textContent =
-
-        player.level;
-
-    }
-
-    const statMoney =
-
-        document.getElementById(
-
-            "statMoney"
-
-        );
-
-    if(statMoney){
-
-        statMoney.textContent =
-
-        player.money.toLocaleString("id-ID");
-
-    }
-
-    const statFish =
-
-        document.getElementById(
-
-            "statFish"
-
-        );
-
-    if(statFish){
-
-        statFish.textContent =
-
-        player.fishCaught;
-
-    }
-
-    const statLevel =
-
-        document.getElementById(
-
-            "statLevel"
-
-        );
-
-    if(statLevel){
-
-        statLevel.textContent =
-
-        player.level;
-
-    }
-
-    const statXP =
-
-        document.getElementById(
-
-            "statXP"
-
-        );
-
-    if(statXP){
-
-        statXP.textContent =
-
-        player.xp +
-
-        " / " +
-
-        player.xpMax;
-
-    }
+    updateMoney();
+    updateLevel();
+    updateXP();
+    updateStats();
 
 }
-
-// ============================
-// Jalankan saat game dibuka
-// ============================
-
-loadPlayer();
