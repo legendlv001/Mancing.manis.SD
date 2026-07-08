@@ -1,0 +1,548 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#06283D;
+}
+
+body{
+    position:relative;
+}
+
+/* Video Kamera */
+
+#camera{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:1;
+}
+
+/* Canvas */
+
+#gameCanvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:2;
+}
+
+/* Splash */
+
+#loadingScreen{
+    position:fixed;
+    inset:0;
+    background:#001d3d;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    z-index:9999;
+}
+
+.loader{
+    width:80px;
+    height:80px;
+    border:8px solid rgba(255,255,255,.2);
+    border-top:8px solid #00d4ff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin-bottom:20px;
+}
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* HUD */
+
+#hud{
+
+    position:fixed;
+
+    top:15px;
+
+    left:0;
+
+    right:0;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:0 20px;
+
+    z-index:20;
+
+}
+
+.topLeft,
+
+.topRight{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.topRight div{
+
+    background:rgba(0,0,0,.6);
+
+    color:white;
+
+    padding:10px 18px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    backdrop-filter:blur(8px);
+
+}
+
+button{
+
+    cursor:pointer;
+
+    border:none;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+/* Tombol */
+
+#cameraBtn,
+
+#menuBtn{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:50%;
+
+    background:#2196F3;
+
+    color:white;
+
+    font-size:24px;
+
+}
+
+#cameraBtn:hover,
+
+#menuBtn:hover{
+
+    transform:scale(1.08);
+
+}
+
+/* Panel bawah */
+
+#bottomPanel{
+
+    position:fixed;
+
+    bottom:35px;
+
+    left:0;
+
+    right:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    z-index:30;
+
+}
+
+#castBtn{
+
+    padding:18px 40px;
+
+    border-radius:40px;
+
+    background:#ff9800;
+
+    color:white;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.3);
+
+}
+
+#castBtn:hover{
+
+    background:#fb8c00;
+
+}
+
+#pullBtn{
+
+    padding:18px 35px;
+
+    border-radius:40px;
+
+    background:#e53935;
+
+    color:white;
+
+    font-size:20px;
+
+    font-weight:bold;
+
+}
+
+/* Challenge */
+
+#challengeBar{
+
+    position:fixed;
+
+    left:10%;
+
+    bottom:120px;
+
+    width:80%;
+
+    height:22px;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    background:#1e293b;
+
+    z-index:30;
+
+}
+
+#challengeProgress{
+
+    width:0%;
+
+    height:100%;
+
+    background:linear-gradient(90deg,#22c55e,#4ade80);
+
+}
+
+/* Modal */
+
+#catchModal{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:rgba(0,0,0,.75);
+
+    z-index:100;
+
+}
+
+.card{
+
+    width:340px;
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:25px;
+
+    text-align:center;
+
+    animation:popup .35s;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+
+}
+
+@keyframes popup{
+
+    from{
+
+        transform:scale(.7);
+
+        opacity:0;
+
+    }
+
+    to{
+
+        transform:scale(1);
+
+        opacity:1;
+
+    }
+
+}
+
+#fishEmoji{
+
+    font-size:80px;
+
+    margin:15px 0;
+
+}
+
+#fishName{
+
+    font-size:30px;
+
+    font-weight:bold;
+
+}
+
+#fishRank{
+
+    display:inline-block;
+
+    margin-top:10px;
+
+    background:gold;
+
+    padding:6px 20px;
+
+    border-radius:30px;
+
+    font-weight:bold;
+
+}
+
+#fishWeight,
+
+#fishLength,
+
+#fishPrice,
+
+#catchDate{
+
+    margin-top:10px;
+
+    font-weight:bold;
+
+}
+
+#playerPhoto{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:50%;
+
+    margin:15px auto;
+
+    object-fit:cover;
+
+    border:4px solid #2196F3;
+
+}
+
+/* Tombol modal */
+
+.buttonGroup{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+.buttonGroup button{
+
+    flex:1;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    color:white;
+
+    font-weight:bold;
+
+}
+
+#downloadBtn{
+
+    background:#16a34a;
+
+}
+
+#shareBtn{
+
+    background:#22c55e;
+
+}
+
+#continueBtn{
+
+    width:100%;
+
+    margin-top:15px;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+/* Panel */
+
+.panel{
+
+    position:fixed;
+
+    top:90px;
+
+    right:15px;
+
+    width:320px;
+
+    max-height:70vh;
+
+    overflow:auto;
+
+    background:rgba(0,0,0,.8);
+
+    color:white;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    z-index:80;
+
+    backdrop-filter:blur(12px);
+
+}
+
+/* Notifikasi */
+
+#notification{
+
+    position:fixed;
+
+    top:80px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#ef4444;
+
+    color:white;
+
+    padding:12px 25px;
+
+    border-radius:50px;
+
+    font-weight:bold;
+
+    z-index:120;
+
+}
+
+/* Achievement */
+
+#achievementPopup{
+
+    position:fixed;
+
+    top:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:#facc15;
+
+    color:#111;
+
+    padding:15px 30px;
+
+    border-radius:50px;
+
+    font-weight:bold;
+
+    z-index:150;
+
+}
+
+.hidden{
+
+    display:none !important;
+
+}
+
+@media(max-width:600px){
+
+.card{
+
+width:92%;
+
+}
+
+#castBtn{
+
+font-size:18px;
+
+padding:16px 25px;
+
+}
+
+.panel{
+
+width:95%;
+
+right:2.5%;
+
+}
+
+}
