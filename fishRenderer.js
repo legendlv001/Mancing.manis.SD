@@ -1,231 +1,191 @@
 // ==========================================
 // fishRenderer.js
 // Crazy Fishing Simulator
-// Menggambar ikan langsung di Canvas
 // ==========================================
+
+"use strict";
 
 class FishRenderer {
 
-    constructor(ctx){
+    constructor(ctx) {
+
         this.ctx = ctx;
-    }
-
-    draw(fish,x,y,scale=1){
-
-        this.ctx.save();
-
-        this.ctx.translate(x,y);
-
-        this.ctx.scale(scale,scale);
-
-        this.drawShadow();
-
-        this.drawTail(fish);
-
-        this.drawBody(fish);
-
-        this.drawFin(fish);
-
-        this.drawEye();
-
-        this.drawPattern(fish);
-
-        this.ctx.restore();
 
     }
 
-    drawShadow(){
+    draw(fish, x, y, scale = 1) {
 
-        this.ctx.fillStyle="rgba(0,0,0,.18)";
+        const ctx = this.ctx;
 
-        this.ctx.beginPath();
+        ctx.save();
 
-        this.ctx.ellipse(0,25,45,10,0,0,Math.PI*2);
+        ctx.translate(x, y);
 
-        this.ctx.fill();
+        ctx.scale(scale, scale);
 
-    }
+        // Warna berdasarkan rarity
+        let color = "#9CA3AF";
 
-    drawBody(fish){
+        switch (fish.rarity) {
 
-        this.ctx.fillStyle=fish.color||"#4FC3F7";
+            case "Common":
+                color = "#9CA3AF";
+                break;
 
-        this.ctx.beginPath();
+            case "Uncommon":
+                color = "#22C55E";
+                break;
 
-        this.ctx.ellipse(0,0,45,25,0,0,Math.PI*2);
+            case "Rare":
+                color = "#3B82F6";
+                break;
 
-        this.ctx.fill();
+            case "Epic":
+                color = "#A855F7";
+                break;
 
-    }
+            case "Legendary":
+                color = "#F59E0B";
+                break;
 
-    drawTail(fish){
-
-        this.ctx.fillStyle=fish.color||"#4FC3F7";
-
-        switch(fish.tail){
-
-            case "fork":
-
-                this.ctx.beginPath();
-
-                this.ctx.moveTo(42,0);
-
-                this.ctx.lineTo(70,-20);
-
-                this.ctx.lineTo(58,0);
-
-                this.ctx.lineTo(70,20);
-
-                this.ctx.closePath();
-
-                this.ctx.fill();
-
-            break;
-
-            case "round":
-
-                this.ctx.beginPath();
-
-                this.ctx.moveTo(42,0);
-
-                this.ctx.quadraticCurveTo(72,0,60,24);
-
-                this.ctx.quadraticCurveTo(55,0,60,-24);
-
-                this.ctx.closePath();
-
-                this.ctx.fill();
-
-            break;
-
-            default:
-
-                this.ctx.beginPath();
-
-                this.ctx.moveTo(42,0);
-
-                this.ctx.lineTo(72,-18);
-
-                this.ctx.lineTo(72,18);
-
-                this.ctx.closePath();
-
-                this.ctx.fill();
+            case "Mythic":
+                color = "#EF4444";
+                break;
 
         }
 
-    }
+        // Badan ikan
+        ctx.fillStyle = color;
 
-    drawFin(fish){
+        ctx.beginPath();
 
-        this.ctx.fillStyle=this.darken(fish.color,25);
+        ctx.ellipse(
 
-        this.ctx.beginPath();
+            0,
 
-        this.ctx.moveTo(-5,-15);
+            0,
 
-        this.ctx.lineTo(8,-42);
+            40,
 
-        this.ctx.lineTo(20,-10);
+            20,
 
-        this.ctx.closePath();
+            0,
 
-        this.ctx.fill();
+            0,
 
-    }
+            Math.PI * 2
 
-    drawEye(){
+        );
 
-        this.ctx.fillStyle="#fff";
+        ctx.fill();
 
-        this.ctx.beginPath();
+        // Ekor
+        ctx.beginPath();
 
-        this.ctx.arc(-25,-5,5,0,Math.PI*2);
+        ctx.moveTo(-40, 0);
 
-        this.ctx.fill();
+        ctx.lineTo(-60, -15);
 
-        this.ctx.fillStyle="#111";
+        ctx.lineTo(-60, 15);
 
-        this.ctx.beginPath();
+        ctx.closePath();
 
-        this.ctx.arc(-25,-5,2,0,Math.PI*2);
+        ctx.fill();
 
-        this.ctx.fill();
+        // Sirip atas
+        ctx.beginPath();
 
-    }
+        ctx.moveTo(-5, -15);
 
-    drawPattern(fish){
+        ctx.lineTo(10, -30);
 
-        if(!fish.pattern) return;
+        ctx.lineTo(20, -15);
 
-        this.ctx.strokeStyle="rgba(255,255,255,.45)";
+        ctx.closePath();
 
-        this.ctx.lineWidth=2;
+        ctx.fill();
 
-        if(fish.pattern==="stripe"){
+        // Sirip bawah
+        ctx.beginPath();
 
-            for(let i=-20;i<=20;i+=10){
+        ctx.moveTo(-5, 15);
 
-                this.ctx.beginPath();
+        ctx.lineTo(10, 30);
 
-                this.ctx.moveTo(i,-18);
+        ctx.lineTo(20, 15);
 
-                this.ctx.lineTo(i,18);
+        ctx.closePath();
 
-                this.ctx.stroke();
+        ctx.fill();
 
-            }
+        // Mata
+        ctx.fillStyle = "#FFFFFF";
 
-        }
+        ctx.beginPath();
 
-        if(fish.pattern==="dots"){
+        ctx.arc(
 
-            this.ctx.fillStyle="rgba(255,255,255,.6)";
+            22,
 
-            for(let i=-15;i<=20;i+=12){
+            -5,
 
-                this.ctx.beginPath();
+            5,
 
-                this.ctx.arc(i,0,2.5,0,Math.PI*2);
+            0,
 
-                this.ctx.fill();
+            Math.PI * 2
 
-            }
+        );
 
-        }
+        ctx.fill();
 
-    }
+        ctx.fillStyle = "#000000";
 
-    darken(color,amount){
+        ctx.beginPath();
 
-        let col=color.replace("#","");
+        ctx.arc(
 
-        let r=parseInt(col.substring(0,2),16);
+            22,
 
-        let g=parseInt(col.substring(2,4),16);
+            -5,
 
-        let b=parseInt(col.substring(4,6),16);
+            2,
 
-        r=Math.max(0,r-amount);
+            0,
 
-        g=Math.max(0,g-amount);
+            Math.PI * 2
 
-        b=Math.max(0,b-amount);
+        );
 
-        return `rgb(${r},${g},${b})`;
+        ctx.fill();
+
+        // Mulut
+        ctx.strokeStyle = "#000000";
+
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+
+            35,
+
+            4
+
+        );
+
+        ctx.lineTo(
+
+            28,
+
+            6
+
+        );
+
+        ctx.stroke();
+
+        ctx.restore();
 
     }
 
 }
-
-// ==========================================
-// Inisialisasi
-// ==========================================
-
-const renderer=new FishRenderer(ctx);
-
-// ==========================================
-// Contoh penggunaan
-// ==========================================
-
-// renderer.draw(fish,300,250,1.2);
