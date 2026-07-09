@@ -476,11 +476,11 @@ if (photoBtn) {
     photoBtn.addEventListener("click", () => {
         if (localStream) {
             stopCamera();
-            photoBtn.textContent = "📷 Hidupkan Kamera";
+            photoBtn.textContent = "📸";
             console.log("Kamera dimatikan.");
         } else {
             startCamera();
-            photoBtn.textContent = "📷 Matikan Kamera";
+            photoBtn.textContent = "📷";
             console.log("Kamera dihidupkan.");
         }
     });
