@@ -5,7 +5,7 @@
 
 "use strict";
 
-const CACHE_NAME = "crazy-fishing-v1.0.1";
+const CACHE_NAME = "crazy-fishing-v1.0.2";
 
 const FILES = [
 
