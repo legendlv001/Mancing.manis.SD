@@ -1,5 +1,5 @@
 // ==========================================
-// game.js FINAL LENGKAP UTUH
+// game.js FINAL LENGKAP UTUH (DENGAN BATAS INVENTORY)
 // Crazy Fishing Simulator
 // ==========================================
 
@@ -507,6 +507,25 @@ function catchFish() {
         ...game.currentFish
 
     };
+
+    // ==========================================
+    // SISTEM PEMBATAS TAS (INVENTORY)
+    // ==========================================
+    if (typeof isInventoryFull === "function" && isInventoryFull()) {
+        
+        // Tampilkan peringatan jika tas penuh
+        alert("⚠️ Inventory Penuh! Jual ikanmu terlebih dahulu di toko.");
+        
+        // Lepas ikan saat ini & reset kail agar tidak macet
+        game.currentFish = null;
+        resetHook();
+        
+        if (pullBtn) pullBtn.classList.add("hidden");
+        if (castBtn) castBtn.classList.remove("hidden");
+        
+        return; // Hentikan fungsi di sini agar ikan tidak masuk tas/jadi uang/XP
+    }
+    // ==========================================
 
     // Inventory
     if (typeof addFish === "function") {
