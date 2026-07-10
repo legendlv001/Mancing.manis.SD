@@ -114,20 +114,35 @@ async function installPrompt() {
 
    
 // ==========================================
-// Sistem Batas Inventory (Tambahkan di Paling Bawah)
+// Sistem Batas Inventory (DEBUG VERSION)
 // ==========================================
-
-// Fungsi global untuk mengecek apakah tas sudah penuh
 function isInventoryFull() {
-    
-    // Jika data player atau inventory belum siap, anggap tidak penuh
-    if (typeof player === "undefined" || !player.inventory) return false;
-    
-    // Jika batas maksimal belum diatur di sistem simpanan, beri nilai default 5
+    // Pastikan player ada
+    if (typeof player === "undefined") {
+        console.log("Error: Player tidak terdefinisi");
+        return false;
+    }
+
+    // Pastikan inventory adalah array
+    if (!Array.isArray(player.inventory)) {
+        console.log("Error: Inventory bukan array");
+        return false;
+    }
+
+    // Jika belum ada batas, set ke 10
     if (!player.inventoryMax) {
-        player.inventoryMax = 5;
+        player.inventoryMax = 10;
+    }
+
+    // Debug: Tampilkan status di console browser
+    console.log("Status Tas:", player.inventory.length, "/", player.inventoryMax);
+
+    // CEK LOGIKA: apakah jumlah ikan >= batas?
+    const isFull = player.inventory.length >= player.inventoryMax;
+    
+    if (isFull) {
+        console.log("Tas Terdeteksi Penuh!");
     }
     
-    // Cek apakah jumlah ikan di tas sudah mencapai atau melebihi batas maksimal
-    return player.inventory.length >= player.inventoryMax;
+    return isFull;
 }
