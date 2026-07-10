@@ -1,5 +1,5 @@
 // ==========================================
-// game.js FINAL LENGKAP - ANTI BOCOR
+// game.js FINAL LENGKAP UTUH - ANTI BOCOR
 // Crazy Fishing Simulator
 // ==========================================
 
@@ -149,6 +149,9 @@ function spawnFish(){
     };
 }
 
+// ==============================
+// Update Ikan
+// ==============================
 function updateFish(){
     if(!game.currentFish) return;
     const fish = game.currentFish;
@@ -193,6 +196,34 @@ function checkStrike(){
 }
 
 // ==============================
+// Event Button
+// ==============================
+if(castBtn){
+    castBtn.addEventListener("click", castLine);
+}
+
+if(pullBtn){
+    pullBtn.addEventListener("click", pullLine);
+}
+
+// Sakelar ON/OFF Kamera
+const photoBtn = document.getElementById("photoBtn") || document.getElementById("cameraBtn") || document.getElementById("toggleCameraBtn"); 
+
+if (photoBtn) {
+    photoBtn.addEventListener("click", () => {
+        if (localStream) {
+            stopCamera();
+            photoBtn.textContent = "📷";
+            console.log("Kamera dimatikan.");
+        } else {
+            startCamera();
+            photoBtn.textContent = "📸";
+            console.log("Kamera dihidupkan.");
+        }
+    });
+}
+
+// ==============================
 // Catch System
 // ==============================
 function catchFish() {
@@ -222,6 +253,8 @@ function catchFish() {
     if (typeof unlockAchievement === "function" && typeof player !== "undefined") {
         if (player.totalFish === 1) unlockAchievement("Strike Pertama");
         if (player.totalFish === 10) unlockAchievement("Pemancing Pemula");
+        if (player.totalFish === 50) unlockAchievement("Pemancing Berpengalaman");
+        if (player.totalFish === 100) unlockAchievement("Master Fishing");
     }
 
     if (catchSound) { catchSound.currentTime = 0; catchSound.play().catch(()=>{}); }
@@ -254,17 +287,117 @@ function checkCatch() {
 }
 
 function updateGame() { updateHook(); updateFish(); checkStrike(); checkCatch(); }
+
+// ==============================
+// Gelembung Air
+// ==============================
+const bubbles = [];
+
+function spawnBubble() {
+    if (bubbles.length > 40) return;
+    bubbles.push({
+        x: random(20, canvas.width - 20),
+        y: canvas.height + 20,
+        radius: random(2, 8),
+        speed: random(0.5, 2)
+    });
+}
+
+function updateBubbles() {
+    for (let i = bubbles.length - 1; i >= 0; i--) {
+        bubbles[i].y -= bubbles[i].speed;
+        if (bubbles[i].y < -20) {
+            bubbles.splice(i, 1);
+        }
+    }
+}
+
+function drawBubbles() {
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    bubbles.forEach(b => {
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
+// ==============================
+// Air & HUD
+// ==============================
+function drawWaterSurface() {
+    ctx.fillStyle = "rgba(255,255,255,0.12)";
+    for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath();
+        ctx.arc(x, 80, 20, 0, Math.PI);
+        ctx.fill();
+    }
+}
+
+function updateHUD() {
+    if (typeof updateMoney === "function") { updateMoney(); }
+    if (typeof updateLevel === "function") { updateLevel(); }
+    if (typeof updateXP === "function") { updateXP(); }
+}
+
+function renderGame() {
+    drawBackground();
+    drawWaterSurface();
+    drawBubbles();
+    drawFish();
+    drawHook();
+}
+
 function gameLoop() {
-    if (!game.running || game.paused) { requestAnimationFrame(gameLoop); return; }
-    updateGame();
-    // Update frame here...
-    game.frame++;
-    if (game.frame % 20 === 0) spawnBubble();
-    updateBubbles();
-    updateHUD();
-    renderGame();
+    if (!game.running) return;
+    
+    if (!game.paused) {
+        updateGame();
+        game.frame++;
+        if (game.frame % 20 === 0) {
+            spawnBubble();
+        }
+        updateBubbles();
+        updateHUD();
+        renderGame();
+    }
     requestAnimationFrame(gameLoop);
 }
+
+// ==============================
+// Pause Saat Tab Tidak Aktif
+// ==============================
+document.addEventListener("visibilitychange", () => {
+    game.paused = document.hidden;
+});
+
+// ==============================
+// Keyboard Shortcut
+// ==============================
+document.addEventListener("keydown", (e) => {
+    switch (e.key.toLowerCase()) {
+        case " ":
+            e.preventDefault();
+            castLine();
+            break;
+        case "enter":
+            pullLine();
+            break;
+        case "escape":
+            if (typeof closeAllPanels === "function") {
+                closeAllPanels();
+            }
+            break;
+    }
+});
+
+// ==============================
+// Autosave
+// ==============================
+setInterval(() => {
+    if (typeof saveGame === "function") {
+        saveGame();
+    }
+}, 30000);
 
 // ==============================
 // Startup
@@ -276,12 +409,35 @@ window.addEventListener("load", () => {
     updateHUD();
     gameLoop();
     
-    // Penanganan Modal
+    console.log("Crazy Fishing Simulator Ready");
+    
+    const loadingScreen = document.getElementById("loadingScreen");
+    if (loadingScreen) {
+        loadingScreen.style.display = "none";
+    }
+
+    // Penutup Modal Lanjutkan yang Aman
     const continueBtn = document.getElementById("continueBtn");
     const catchModal = document.getElementById("catchModal");
+
     if (continueBtn && catchModal) {
         continueBtn.addEventListener("click", () => {
             catchModal.style.setProperty("display", "none", "important");
+            console.log("Modal berhasil ditutup.");
         });
+    }
+
+    // Memaksa Modal Muncul Kembali pada Ikan Selanjutnya
+    if (typeof showCatchResult === "function") {
+        const originalShowCatchResult = showCatchResult;
+        showCatchResult = function(fish) {
+            originalShowCatchResult(fish);
+            
+            if (catchModal) {
+                catchModal.classList.remove("hidden");
+                catchModal.style.setProperty("display", "flex", "important");
+                console.log("Modal dipaksa muncul untuk ikan: " + fish.name);
+            }
+        };
     }
 });
