@@ -1,10 +1,9 @@
 // ==========================================
-// app.js
+// app.js (FINAL LENGKAP UTUH)
 // Crazy Fishing Simulator
 // ==========================================
 
 "use strict";
-
 
 // ==========================================
 // APP
@@ -111,38 +110,62 @@ window.addEventListener(
 async function installPrompt() {
 
     const btn = document.getElementById("installBtn");
+    
+    if (btn) {
+        btn.addEventListener("click", async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log("User response to install prompt:", outcome);
+            deferredPrompt = null;
+        });
+    }
 
-   
+}
+
+// Fungsi dummy untuk menghindari error jika belum ada di file lain
+function registerServiceWorker() {
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js")
+            .catch(err => console.log("Service Worker gagl:", err));
+    }
+}
+
 // ==========================================
-// Sistem Batas Inventory (DEBUG VERSION)
+// SAKELAR BATAS INVENTORY (SISTEM DETEKSI)
 // ==========================================
 function isInventoryFull() {
-    // Pastikan player ada
-    if (typeof player === "undefined") {
-        console.log("Error: Player tidak terdefinisi");
-        return false;
-    }
-
-    // Pastikan inventory adalah array
-    if (!Array.isArray(player.inventory)) {
-        console.log("Error: Inventory bukan array");
-        return false;
-    }
-
-    // Jika belum ada batas, set ke 10
-    if (!player.inventoryMax) {
-        player.inventoryMax = 10;
-    }
-
-    // Debug: Tampilkan status di console browser
-    console.log("Status Tas:", player.inventory.length, "/", player.inventoryMax);
-
-    // CEK LOGIKA: apakah jumlah ikan >= batas?
-    const isFull = player.inventory.length >= player.inventoryMax;
     
-    if (isFull) {
-        console.log("Tas Terdeteksi Penuh!");
+    // 1. Ambil data inventory dari simpanan lokal jika variabel global player bermasalah
+    let currentInventory = [];
+    let maxSlot = 10; // Set batas bawaan awal: 10 slot
+
+    if (typeof player !== "undefined") {
+        if (Array.isArray(player.inventory)) {
+            currentInventory = player.inventory;
+        }
+        if (player.inventoryMax) {
+            maxSlot = player.inventoryMax;
+        } else {
+            player.inventoryMax = maxSlot;
+        }
+    } else {
+        // Jika variabel player di memori hilang, coba intip cadangan di localStorage
+        try {
+            const savedData = localStorage.getItem("crazy_fishing_player"); // Sesuaikan nama key simpananmu
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                if (parsed.inventory) currentInventory = parsed.inventory;
+                if (parsed.inventoryMax) maxSlot = parsed.inventoryMax;
+            }
+        } catch (e) {
+            console.log("Gagal membaca cadangan inventory");
+        }
     }
-    
-    return isFull;
+
+    // 2. Tampilkan di log browser untuk memantau isi tas
+    console.log(`[LOG TAS] Jumlah Ikan: ${currentInventory.length} / Maksimal: ${maxSlot}`);
+
+    // 3. Eksekusi keputusan: Apakah tas sudah penuh?
+    return currentInventory.length >= maxSlot;
 }
