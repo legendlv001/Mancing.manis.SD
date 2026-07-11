@@ -180,6 +180,9 @@ function upgradeChest(){
 
 function resetPlayer(){
 
+    // Hapus paksa memori lokal browser agar struktur data diperbarui
+    localStorage.clear(); 
+
     player.level = 1;
     player.xp = 0;
     player.maxXP = 100;
@@ -187,7 +190,10 @@ function resetPlayer(){
 
     player.rodLevel = 1;
     player.chestLevel = 1;
-    player.inventoryMax = 10; // BARU: Reset slot kembali ke 10 awal
+    player.inventoryMax = 10; // Reset slot kembali ke 10 awal
+
+    // Kosongkan array inventory agar kembali nol
+    player.inventory = []; 
 
     player.totalFish = 0;
     player.totalWeight = 0;
@@ -198,6 +204,9 @@ function resetPlayer(){
     updateXP();
     updateStats();
 
+    // Tampilkan notifikasi dan segarkan halaman secara otomatis
+    alert("Data game berhasil dibersihkan total! Game akan dimuat ulang.");
+    window.location.reload();
 }
 
 // ==========================================
