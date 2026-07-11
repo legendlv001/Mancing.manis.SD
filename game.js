@@ -1,5 +1,5 @@
 // ==========================================
-// game.js FINAL LENGKAP UTUH - ANTI BOCOR
+// game.js FINAL LENGKAP UTUH - ANTI BOCOR (FIXED INVENTORY)
 // Crazy Fishing Simulator
 // ==========================================
 
@@ -224,21 +224,23 @@ if (photoBtn) {
 }
 
 // ==============================
-// Catch System
+// Catch System (TERINTEGRASI DAN AMAN)
 // ==============================
 function catchFish() {
-    if (!game.currentFish || game.currentFish.alive) return;
+    if (!game.currentFish || game.currentFish.alive) return false;
 
-    // --- PEMBATAS TAS LANGSUNG DI SINI ---
+    // --- PERBAIKAN: PEMBATAS TAS AKTIF ---
     if (typeof player !== "undefined" && Array.isArray(player.inventory)) {
         const maxSlots = player.inventoryMax || 10;
         if (player.inventory.length >= maxSlots) {
             alert("⚠️ Inventory Penuh! Kosongkan tasmu di toko.");
+            
+            // Hentikan penarikan kail, paksa tombol kembali normal tanpa menambah ikan
             game.currentFish = null;
             resetHook();
             if(pullBtn) pullBtn.classList.add("hidden");
             if(castBtn) castBtn.classList.remove("hidden");
-            return; // Hentikan di sini!
+            return false; // Mengembalikan nilai false agar fungsi luar tahu tas penuh
         }
     }
     // -------------------------------------
@@ -263,6 +265,8 @@ function catchFish() {
     game.currentFish = null;
     if(pullBtn) pullBtn.classList.add("hidden");
     if(castBtn) castBtn.classList.remove("hidden");
+    
+    return true; // Mengembalikan true jika penangkapan sukses
 }
 
 // ==============================
@@ -280,7 +284,15 @@ function showCatchResult(fish) {
 
 function checkCatch() {
     if (!hook.pulling || hook.y > 80) return;
-    if (game.currentFish && game.currentFish.alive === false) catchFish();
+    
+    // PERBAIKAN: Validasi hasil tangkapan sebelum mereset posisi pancingan
+    if (game.currentFish && game.currentFish.alive === false) {
+        const isSuccess = catchFish();
+        if (!isSuccess) {
+            return; // Hentikan fungsi di sini jika tas penuh agar kail tidak bocor
+        }
+    }
+    
     resetHook();
     if(castBtn) castBtn.classList.remove("hidden");
     if(pullBtn) pullBtn.classList.add("hidden");
