@@ -157,14 +157,18 @@ function upgradeChest(){
 
     player.chestLevel++;
 
+    // BARU: Menambah 5 slot setiap naik level (Lv1 = 10, Lv2 = 15, Lv3 = 20, dst.)
+    player.inventoryMax = 10 + (player.chestLevel - 1) * 5; 
+
     document.getElementById("chestLevel").textContent =
         player.chestLevel;
 
     showNotification(
-        "Tas berhasil di-upgrade!"
+        "Tas berhasil di-upgrade! Kapasitas baru: " + player.inventoryMax + " slot."
     );
 
 }
+
 
 // ==========================================
 // Reset Player
