@@ -19,6 +19,10 @@ const player = {
     // Upgrade
     rodLevel: 1,
     chestLevel: 1,
+    inventoryMax: 10, // Tambahkan ini agar ada batas awal 10 slot
+
+    // BARU: Tempat menampung ikan yang ditangkap
+    inventory: [], 
 
     // Statistik
     totalFish: 0,
