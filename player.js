@@ -183,6 +183,7 @@ function resetPlayer(){
 
     player.rodLevel = 1;
     player.chestLevel = 1;
+    player.inventoryMax = 10; // BARU: Reset slot kembali ke 10 awal
 
     player.totalFish = 0;
     player.totalWeight = 0;
