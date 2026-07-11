@@ -199,3 +199,18 @@ function resetPlayer(){
     updateStats();
 
 }
+
+// ==========================================
+// Fungsi Memasukkan Ikan ke Tas
+// ==========================================
+function addFish(fish) {
+    if (!player.inventory) {
+        player.inventory = [];
+    }
+    
+    // Memasukkan data ikan yang ditangkap ke dalam tas player
+    player.inventory.push(fish); 
+    
+    console.log(`[TAS] Berhasil menyimpan ${fish.name}. Total di tas: ${player.inventory.length}`);
+}
+
